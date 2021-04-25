@@ -39,6 +39,27 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Instagram Clone
+
+This is a client side rendered app built with React. The app is connected to a Firebase database.
+This app was built following Karl Hadwen tutorial: https://youtu.be/mDgEqoQUBgk
+
+## Source Folder Architecture
+
+In the src folder, you'll find the following sub folders:
+-> components: this will contain all the components of the application
+-> constants
+-> context
+-> pages: for the application pages
+-> hooks: that will contain the non-built-in hooks
+-> helpers: this will contain all the helper methods needed to build the app's features
+-> lib: this is where firebase will live
+-> services: this is the container for firebase functions
+## Dependencies
+
+> react-loading-skeleton
+> tailwind css
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
