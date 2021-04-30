@@ -19,6 +19,14 @@ In the src folder, you'll find the following sub folders:
 > react-loading-skeleton
 > tailwind css
 
+## How to Use the App
+
+1. Fork this app then clone it on your console.
+2. Before loading the app, create your firebase db and replace the uid in "src/seed.js" with your uid.
+3. Go to "src/lib/firebase.js" and uncomment line 6 and 21 to seed the sample data in your firestore database.
+4. Start the app by running `yarn start` or `npm start` on your console
+5. Verify that the sample data has been seeded in your firestore then comment back line 6 and 21 in "src/lib/firebase.js" to prevent duplicating data on relaod.
+   
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
