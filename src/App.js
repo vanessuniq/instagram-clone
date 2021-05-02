@@ -2,6 +2,7 @@
 import { lazy, Suspense } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { LOGIN } from "./constants/routes";
 
 const Login = lazy(() => import("./pages/Login"));
 
@@ -14,7 +15,7 @@ function App() {
             <Skeleton circle={true} height={100}/>
           </SkeletonTheme>}>
           <Switch>
-            <Route exact path="/">
+            <Route exact path={LOGIN}>
               <Login/>
             </Route>
           </Switch>
