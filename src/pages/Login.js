@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { SIGN_UP } from "../constants/routes";
+import { DASHBOARD, SIGN_UP } from "../constants/routes";
 import FirebaseContext from "../context/FirebaseContext";
 
 function Login(){
     const history = useHistory();
-    const { firebase } = useContext(FirebaseContext);
+    const { firebaseApp } = useContext(FirebaseContext);
     const [credentials, setCredentials] = useState({
         emailAddress: "",
         password: ""
@@ -20,13 +20,17 @@ function Login(){
             [event.target.name]: event.target.value
         })
     };
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
-        if (isInvalid){
-         setError("Email or password should not be empty.");
-        } else {
-         // do something else
-        };
+        const { emailAddress, password } = credentials;
+        try {
+            await firebaseApp.auth().signInWithEmailAndPassword(emailAddress, password);
+            setCredentials({...credentials, emailAddress: "", password: ""});
+            setError("");
+            history.push(DASHBOARD);
+        } catch (error) {
+            setError(error.message);
+        }
     };
     useEffect(() => {
         document.title = "Login - Instagram";
