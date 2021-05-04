@@ -1,31 +1,33 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { DASHBOARD, SIGN_UP } from "../constants/routes";
+import { DASHBOARD, LOGIN } from "../constants/routes";
 import FirebaseContext from "../context/FirebaseContext";
 
-function Login(){
+function Signup(){
     const history = useHistory();
     const { firebaseApp } = useContext(FirebaseContext);
-    const [credentials, setCredentials] = useState({
+    const [userInfo, setUserInfo] = useState({
+        username: "",
+        fullName: "",
         emailAddress: "",
         password: ""
     });
     const [error, setError] = useState("");
-    const isInvalid = credentials.emailAddress === "" || credentials.password === "";
+    const isInvalid = userInfo.emailAddress === "" || userInfo.password === "";
 
     const handleInputChange = (event) => {
-        setCredentials({
-            ...credentials,
+        setUserInfo({
+            ...userInfo,
             [event.target.name]: event.target.value
         })
     };
-    const handleLogin = async (event) => {
+    const handleSignup = async (event) => {
         event.preventDefault();
-        const { emailAddress, password } = credentials;
+        const { emailAddress, password } = userInfo;
         try {
             await firebaseApp.auth().signInWithEmailAndPassword(emailAddress, password);
-            setCredentials({...credentials, emailAddress: "", password: ""});
+            setUserInfo({...userInfo, emailAddress: "", password: ""});
             setError("");
             history.push(DASHBOARD);
         } catch (error) {
@@ -33,7 +35,7 @@ function Login(){
         }
     };
     useEffect(() => {
-        document.title = "Login - Instagram";
+        document.title = "Sign Up - Instagram";
     }, [])
     return(
         <div className="container flex mx-auto max-w-screen-md items-center 
@@ -57,13 +59,29 @@ function Login(){
 
                 {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSignup}>
+                    <input type="text" name="username"
+                        aria-label="Enter your username"
+                        placeholder="Username"
+                        className="text-sm text-gray-base w-full mr-3 mb-2 py-5 
+                        px-4 h-2 border border-gray-primary rounded"
+                        value={userInfo.username}
+                        onChange={handleInputChange}
+                    />
+                    <input type="text" name="fullName"
+                        aria-label="Enter your full name"
+                        placeholder="Full name"
+                        className="text-sm text-gray-base w-full mr-3 mb-2 py-5 
+                        px-4 h-2 border border-gray-primary rounded"
+                        value={userInfo.fullName}
+                        onChange={handleInputChange}
+                    />
                     <input type="text" name="emailAddress"
                         aria-label="Enter your email address"
                         placeholder="Email address"
                         className="text-sm text-gray-base w-full mr-3 mb-2 py-5 
                         px-4 h-2 border border-gray-primary rounded"
-                        value={credentials.emailAddress}
+                        value={userInfo.emailAddress}
                         onChange={handleInputChange}
                     />
                     <input type="password" name="password"
@@ -71,23 +89,23 @@ function Login(){
                         placeholder="Password"
                         className="text-sm text-gray-base w-full mr-3 mb-2 
                         py-5 px-4 h-2 border border-gray-primary rounded"
-                        value={credentials.password}
+                        value={userInfo.password}
                         onChange={handleInputChange}
                     />
                     <button disabled={isInvalid} type="submit"
                         className={`text-white bg-blue-medium w-full rounded h-8 
                         font-bold ${isInvalid && "opacity-50"}`}
                     >
-                        Log in
+                        Sign up
                     </button>
                 </form>
            </div>
            <div className="flex flex-col justify-center items-center
             w-full bg-white p-4 border border-gray-primary rounded"
            >
-            <p className="text-sm">Dont have an account?{` `}
-                <Link to={SIGN_UP} className="font-bold text-blue-medium">
-                    Sign up
+            <p className="text-sm">Already have an account?{` `}
+                <Link to={LOGIN} className="font-bold text-blue-medium">
+                    Log in
                 </Link>
             </p>
            </div>
@@ -96,4 +114,4 @@ function Login(){
     )
 }
 
-export default Login;
+export default Signup;

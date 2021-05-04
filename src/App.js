@@ -2,9 +2,10 @@
 import { lazy, Suspense } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { LOGIN } from "./constants/routes";
+import { LOGIN, SIGN_UP } from "./constants/routes";
 
 const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           <Switch>
             <Route exact path={LOGIN}>
               <Login/>
+            </Route>
+            <Route exact path={SIGN_UP}>
+              <Signup/>
             </Route>
           </Switch>
         </Suspense>
