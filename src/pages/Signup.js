@@ -3,16 +3,18 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { DASHBOARD, LOGIN } from "../constants/routes";
 import FirebaseContext from "../context/FirebaseContext";
+import { doesUsernameExist } from "../services/firebase";
 
 function Signup(){
     const history = useHistory();
     const { firebaseApp } = useContext(FirebaseContext);
-    const [userInfo, setUserInfo] = useState({
+    const initialUserInfoState = {
         username: "",
         fullName: "",
         emailAddress: "",
         password: ""
-    });
+    }
+    const [userInfo, setUserInfo] = useState(initialUserInfoState);
     const [error, setError] = useState("");
     const isInvalid = userInfo.emailAddress === "" || userInfo.password === "";
 
@@ -24,15 +26,44 @@ function Signup(){
     };
     const handleSignup = async (event) => {
         event.preventDefault();
-        const { emailAddress, password } = userInfo;
-        try {
-            await firebaseApp.auth().signInWithEmailAndPassword(emailAddress, password);
-            setUserInfo({...userInfo, emailAddress: "", password: ""});
+        const { username, fullName, emailAddress, password } = userInfo;
+        const usernameExist = await doesUsernameExist(username.toLowerCase());
+
+        if (usernameExist){
+         setError("The username entered is already taken, please try another one.")
+        } else {
+         try {
+            const createdUser = await firebaseApp
+                .auth()
+                .createUserWithEmailAndPassword(emailAddress, password);
+
+            // Update the user profile to add the username
+            await createdUser.user.updateProfile({displayName: username});
+
+            // Create a document in the firebase user collection
+            await firebaseApp.firestore().collection("users").add({
+                userId: createdUser.user.uid,
+                username: username.toLowerCase(),
+                fullName,
+                emailAddress: emailAddress.toLowerCase(),
+                following: [],
+                followers: [],
+                dateCreated: Date.now()
+            });
+
+            // Reset the signup form and redirect to dashboard page
+            setUserInfo({
+                ...userInfo,
+                ...initialUserInfoState
+            });
             setError("");
+
             history.push(DASHBOARD);
-        } catch (error) {
-            setError(error.message);
-        }
+
+         } catch (error) {
+             setError(error.message);
+         }
+        };
     };
     useEffect(() => {
         document.title = "Sign Up - Instagram";
