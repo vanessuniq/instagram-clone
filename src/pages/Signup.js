@@ -27,7 +27,7 @@ function Signup(){
     const handleSignup = async (event) => {
         event.preventDefault();
         const { username, fullName, emailAddress, password } = userInfo;
-        const usernameExist = await doesUsernameExist(username.toLowerCase());
+        const usernameExist = await doesUsernameExist(username);
 
         if (usernameExist){
          setError("The username entered is already taken, please try another one.")

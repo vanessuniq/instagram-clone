@@ -5,7 +5,7 @@ export async function doesUsernameExist(username) {
     const result = await firebaseApp
         .firestore()
         .collection("users")
-        .where("username", "==", username)
+        .where("username", "==", username.toLowerCase())
         .get();
 
     return result.docs.length > 0;
