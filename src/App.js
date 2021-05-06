@@ -3,6 +3,8 @@ import { lazy, Suspense } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { DASHBOARD, LOGIN, NOT_FOUND, SIGN_UP } from "./constants/routes";
+import UserContext from "./context/UserContext";
+import useAuthListener from "./hooks/useAuthListener";
 
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -10,8 +12,9 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 function App() {
+  const { user } = useAuthListener();
   return (
-    <div>
+    <UserContext.Provider value={user}>
       <Router>
         <Suspense fallback={
           <SkeletonTheme color="#3f0f0f" highlightColor="#202020">
@@ -33,7 +36,7 @@ function App() {
           </Switch>
         </Suspense>
       </Router>
-    </div>
+    </UserContext.Provider>
   );
 }
 
